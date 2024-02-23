@@ -1,0 +1,21 @@
+### REGISTER
+POST http://localhost:5252/auth/register
+content-type: application/json
+
+{
+  "firstName": "Karol",
+  "lastName": "Maj",
+  "email": "test@test.com",
+  "password": "password"
+}
+
+### LOGIN
+POST http://localhost:5252/auth/login
+content-type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password"
+}
+
+
