@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using commander.application.Interface.Authentication;
 using commander.application.Interface.Services;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace commander.infrastructure.Authentication;
@@ -10,15 +11,17 @@ namespace commander.infrastructure.Authentication;
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
   private readonly IDateTimeProvider _dateTimeProvider;
-  public JwtTokenGenerator(IDateTimeProvider dateTimeProvider)
+  private readonly JwtSettings _jwtSettings;
+  public JwtTokenGenerator(IDateTimeProvider dateTimeProvider, IOptions<JwtSettings> jwtSettings)
   {
     _dateTimeProvider = dateTimeProvider;
+    _jwtSettings = jwtSettings.Value;
   }
   public string GenerateToken(Guid userId, string firstName, string lastName, string role)
   {
     var signingCredentials = new SigningCredentials(
       new SymmetricSecurityKey(
-        Encoding.UTF8.GetBytes("super-secret-secret")),
+        Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
         SecurityAlgorithms.HmacSha256
       );
 
@@ -29,8 +32,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         new Claim(JwtRegisteredClaimNames.FamilyName, lastName),
       };
     var securityToken = new JwtSecurityToken(
-      issuer: "commander",
-      expires: _dateTimeProvider.UtcNow.AddMinutes(60),
+      issuer: _jwtSettings.Issuer,
+      expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpireMinutes),
+      audience: _jwtSettings.Audience,
       claims: claims,
       signingCredentials: signingCredentials
     );

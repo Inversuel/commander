@@ -1,5 +1,8 @@
+# @host = http://localhost:5252
+@host = https://localhost:7263
+
 ### REGISTER
-POST http://localhost:5252/auth/register
+POST {{host}}/auth/register
 content-type: application/json
 
 {
@@ -10,12 +13,11 @@ content-type: application/json
 }
 
 ### LOGIN
-POST http://localhost:5252/auth/login
+POST {{host}}/auth/login
 content-type: application/json
 
 {
   "email": "test@test.com",
   "password": "password"
 }
-
 

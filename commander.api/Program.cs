@@ -8,8 +8,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 {
     builder.Services
-    .AddApplication()
-    .AddInfrastructure();
+        .AddApplication()
+        .AddInfrastructure(builder.Configuration);
     builder.Services.AddControllers();
 }
 // builder.Services.AddDbContext<CommanderContext>(opt => opt.UseMySql(builder.Configuration.GetConnectionString("CommanderConnection")));
